@@ -12,4 +12,11 @@ import { CommonModule } from '@angular/common';
   `,
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {}
+export class AppComponent {
+    title: string = 'BBC News Articles';
+
+    constructor() {
+        console.log('AppComponent initialized');
+    }
+}
+
