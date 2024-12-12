@@ -52,7 +52,7 @@ export function app(): Express {
 
 
 function run(): void {
-  const port: number = parseInt(process.env.PORT || '4000', 10);
+   const port = process.env.PORT ?? 4000;
 
   const server = app();
   server.listen(port, () => {
