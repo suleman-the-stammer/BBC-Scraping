@@ -4,27 +4,26 @@ import express, { Express, Request, Response, NextFunction } from 'express';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
 import bootstrap from './src/main.server';
-
+import { escape } from 'lodash';
 
 export function app(): Express {
   const server: Express = express();
 
   const serverDistFolder: string = dirname(fileURLToPath(import.meta.url));
   const browserDistFolder: string = resolve(serverDistFolder, '../browser');
-  const indexHtml: string = join(serverDistFolder, 'index.server.html');
+  const indexHtml: string = escape(join(serverDistFolder, 'index.server.html'));
 
   const commonEngine: CommonEngine = new CommonEngine();
 
- 
   server.set('view engine', 'html');
   server.set('views', browserDistFolder);
 
- 
-  server.use(express.static(browserDistFolder, {
-    maxAge: '1y',
-    index: 'index.html',
-  }));
-
+  server.use(
+    express.static(browserDistFolder, {
+      maxAge: '1y',
+      index: 'index.html',
+    })
+  );
 
   server.get('**', (req: Request, res: Response, next: NextFunction) => {
     const { protocol } = req;
@@ -42,7 +41,7 @@ export function app(): Express {
       })
       .then((html: string) => res.send(html))
       .catch((err: Error) => {
-        console.error('Error during server-side rendering:', err);
+        console.error('Error during server-side rendering:', err.message);
         next(err); // Pass the error to Express error handler
       });
   });
@@ -50,9 +49,8 @@ export function app(): Express {
   return server;
 }
 
-
 function run(): void {
-   const port = process.env.PORT ?? 4000;
+  const port = process.env.PORT ?? 4000;
 
   const server = app();
   server.listen(port, () => {
