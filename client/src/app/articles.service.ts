@@ -11,7 +11,7 @@ export class ArticlesService {
 
 
 
-  getArticles(): Observable<any[]> {
+    getArticles(): Observable<unknown[]> {
     return this.http.get<any[]>(this.apiUrl);
   }
 }
